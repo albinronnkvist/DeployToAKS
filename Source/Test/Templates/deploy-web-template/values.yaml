@@ -1,0 +1,3 @@
+deployment:
+  image: adronl0t.azurecr.io/microservice-template-web
+name: microservice-template-web
