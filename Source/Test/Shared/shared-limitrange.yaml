@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: shared-limitrange
+  namespace: test
+spec:
+  limits:
+  - default:
+      cpu: 600m
+      memory: 512Mi
+    defaultRequest:
+      cpu: 100m
+      memory: 256Mi
+    max:
+      cpu: 1000m
+      memory: 800Mib
+    min:
+      cpu: 10m
+      memory: 10Mib
+    type: Container

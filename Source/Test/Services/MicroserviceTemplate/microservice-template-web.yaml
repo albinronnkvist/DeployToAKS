@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-template-web-deployment
+  labels:
+    app: microservice-template-web
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservice-template-web
+  template:
+    metadata:
+      labels:
+        app: microservice-template-web
+    spec:
+      containers:
+      - name: microservice-template-web
+        image: adronl0t.azurecr.io/microservice-template-web:stable
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 80
+          successThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          failureThreshold: 1
+        env:
+        - name: DOTNET_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: shared-configmap
+              key: environment
+        - name: KeyVaultOptions__Enabled
+          valueFrom:
+            configMapKeyRef:
+              name: shared-configmap
+              key: key-vault-enabled
+              optional: true
+        - name: KeyVaultOptions__TenantId
+          valueFrom:
+            secretKeyRef:
+              name: shared-secret
+              key: KeyVaultOptions__TenantId
+        - name: KeyVaultOptions__ClientId
+          valueFrom:
+            secretKeyRef:
+              name: shared-secret
+              key: KeyVaultOptions__ClientId
+        - name: KeyVaultOptions__ClientSecret
+          valueFrom:
+            secretKeyRef:
+              name: shared-secret
+              key: KeyVaultOptions__ClientSecret
+        ports:
+        - containerPort: 80
+    restartPolicy: always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice-template-web-service
+  namespace: test
+spec:
+  selector:
+    app: microservice-template-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: microservice-template-web-ingress
+  annotations:
+    certmanager.k8s.io/cluster-issuer: letsencrypt
+    cert-manager.io/cluster-issuer: letsencrypt
+  namespace: test
+spec:
+  tls:
+  - hosts:
+    - adronl-t-microservice-template-web.westeurope.cloudapp.azure.com
+      secretName: microservice-template-web-tls
+  rules:
+  - host: adronl-t-microservice-template-web.westeurope.cloudapp.azure.com
+    http:
+      paths: 
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: microservice-template-web-service
+            port: 
+              number: 80
