@@ -1,17 +1,34 @@
 ###
+# RBAC
+###
+# Specify subscription by name
+az account set --subscription "Adrava - Test/Stage"
+
+# Create an Azure AD group (and copy the id for later use)
+az ad group create --display-name AksAdmins --mail-nickname aks-admins
+# b0be2f65-f86b-4668-8eaa-b22e1f3d9496
+
+# Add a member to the group
+az ad group member add --group AksAdmins --member-id 0c65442c-e207-4c71-abf1-a411f596c80f
+
+
+
+###
 # Create cluster
 ###
 # Create resource group
 az group create --name Kubernetes-T --location westeurope
 
-# Create AKS cluster
+# Create AKS cluster (this will take a while)
+# replace <id> with the object ID of your Azure AD group
 az aks create \
     -g Kubernetes-T \
     -n adronl-t1 \
-    --enable-managed-identity \
+    --enable-aad \
+    --aad-admin-group-object-ids b0be2f65-f86b-4668-8eaa-b22e1f3d9496 \
+    --aad-tenant-id b0be2f65-f86b-4668-8eaa-b22e1f3d9496 \
     --node-count 1 \
-    --enable-addons monitoring \
-    --enable-msi-auth-for-monitoring \
+    #--enable-addons monitoring \
     --generate-ssh-keys
 
 # Install Kubectl locally
@@ -28,7 +45,7 @@ kubectl get nodes
 
 
 ####
-# Create non-environment specifc namespaces
+# Create non-environment specific namespaces
 ####
 kubectl apply -f Source/Shared/ingress-namespace.yaml
 
@@ -58,3 +75,12 @@ kubectl apply -f Source/Shared/letsencrypt-clusterissuer.yaml
 
 # (Optional) List cluster-issuers
 kubectl get clusterissuers
+
+
+
+###
+# Nginx Ingress Controller
+###
+# Install 
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update

@@ -4,7 +4,7 @@ kubectl scale --replicas=5 deployment/microservice-template-web-deployment
 # Auto scale pods
 kubectl autoscale deployment microservice-template-web-deployment --cpu-percent=50 --min=3 --max=10
 # Or
-kubectl apply -f microservice-template-web-autoscaling.yaml
+kubectl apply -f Source/Test/Services/microservice-template-web-autoscaling.yaml
 
 # Manually scale AKS nodes
 az aks scale --resource-group Kubernetes-T --name adronl-t1 --node-count 3

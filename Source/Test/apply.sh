@@ -20,10 +20,10 @@ kubectl apply -f Source/Test/Shared/shared-limitrange.yaml
 ###
 # Microservice with: Deployment, Service & Ingress
 # We also need to install Ingress Nginx Controller
-kubectl apply -f Source/Test/microservice-template-web.yaml
-helm install corniche-events-relay-nginx ingress-nginx/ingress-nginx \
-    --version 4.0.19 \
-    --set controller.ingressClassResource.name=corniche-events-relay-nginx 
+kubectl apply -f Source/Test/Services/microservice-template-web.yaml
+helm install microservice-template-web-nginx ingress-nginx/ingress-nginx \
+    --version 4.1.3 \
+    --set controller.ingressClassResource.name=microservice-template-web-nginx 
     --set defaultController.replicaCount=2 \
     --set rbac.create=true 
     --set defaultController.nodeSelector."kubernetes.io/os"=linux \
