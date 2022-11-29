@@ -18,14 +18,14 @@ spec:
       containers:
       - name: microservice-template-web
         image: adronl0t.azurecr.io/microservice-template-web:stable
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: 80
-        livenessProbe:
-          httpGet:
-            path: /health/live
-            port: 80
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health/ready
+        #     port: 80
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health/live
+        #     port: 80
         env:
         - name: DOTNET_ENVIRONMENT
           valueFrom:

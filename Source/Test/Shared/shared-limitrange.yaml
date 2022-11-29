@@ -1,3 +1,5 @@
+# We use LimitRange object in our Namespace to set limits on resources on containers(Pods) running within the namespace.
+# Unlike the ResourceQuota object that looks at the entire namespace. A LimitRange enforces itself on individual containers.
 apiVersion: v1
 kind: LimitRange
 metadata:
@@ -5,16 +7,16 @@ metadata:
   namespace: test
 spec:
   limits:
-  - default:
+  - default: # Sets up the default limits for a container in a pod. Any container with no limits defined will get the values from this object assigned as default.
       cpu: 600m
-      memory: 512Mi
-    defaultRequest:
+      memory: 100Mi
+    defaultRequest: # Sets up the default requests for a container in a pod. Any container with no requests defined will get these values assigned as default.
       cpu: 100m
-      memory: 256Mi
-    max:
+      memory: 50Mi
+    max: # Sets up the maximum limits that a container in a Pod can set.
       cpu: 1000m
-      memory: 800Mib
-    min:
+      memory: 1Gi
+    min: # Sets up the minimum Requests that a container in a Pod can set.
       cpu: 10m
-      memory: 10Mib
+      memory: 10Mi
     type: Container

@@ -1,3 +1,6 @@
+# We use the ResourceQuota object to limit down the total amount of resource used by the namespace.
+# Requests are what the containers are guaranteed to get. If the container requests a resource, K8s will only schedule it on a Node that can give it that resource.
+# Limits makes sure that a container can never go above a certain value. Containers only allow to go up to the value and are then restricted.
 apiVersion: v1
   kind: ResourceQuota
   metadata:
@@ -5,8 +8,8 @@ apiVersion: v1
     namespace: test
   spec:
     hard:
-      requests.cpu: 1000m
-      requests.memory: 200Mib
-      limits.cpu: 2000m
-      limits.memory: 1000Mib
-      pods: "2"
+      requests.cpu: 3000m # the maximum CPU millicores allocated for all the containers(Pods) in the Namespace
+      requests.memory: 1Gi # the maximum Memory allocated for all the containers(Pods) in the Namespace
+      limits.cpu: 5000m # the maximum CPU cores limit for all the containers(Pods) in the Namespace
+      limits.memory: 2Gi # the maximum Memory limit for all containers(Pods) in the Namespace
+      pods: "10" # the maximum number of pods allowed in the namespace.
