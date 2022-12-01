@@ -2,14 +2,14 @@
 # RBAC
 ###
 # Specify subscription by name
-az account set --subscription "Adrava - Test/Stage"
+az account set --subscription "<subscription-name>"
 
 # Create an Azure AD group (and copy the id for later use)
-az ad group create --display-name AksAdmins --mail-nickname aks-admins
+az ad group create --display-name <display-name> --mail-nickname <nickname>
 # b0be2f65-f86b-4668-8eaa-b22e1f3d9496
 
 # Add a member to the group
-az ad group member add --group AksAdmins --member-id 0c65442c-e207-4c71-abf1-a411f596c80f
+az ad group member add --group <display-name> --member-id <user-id>
 
 
 
@@ -17,25 +17,24 @@ az ad group member add --group AksAdmins --member-id 0c65442c-e207-4c71-abf1-a41
 # Create cluster
 ###
 # Create resource group
-az group create --name Kubernetes-T --location westeurope
+az group create --name <name-of-resource-group> --location <location>
 
-# Create AKS cluster (this will take a while)
-# replace <id> with the object ID of your Azure AD group
+# Create AKS cluster
 az aks create \
-    -g Kubernetes-T \
-    -n adronl-t1 \
+    -g <name-of-resource-group> \
+    -n <name-of-cluster> \
     --enable-aad \
-    --aad-admin-group-object-ids b0be2f65-f86b-4668-8eaa-b22e1f3d9496 \
-    --aad-tenant-id b0be2f65-f86b-4668-8eaa-b22e1f3d9496 \
+    --aad-admin-group-object-ids <aad-group-id> \
+    --aad-tenant-id <aad-group-id> \
     --node-count 1 \
-    #--enable-addons monitoring \
+    --enable-addons monitoring \
     --generate-ssh-keys
 
 # Install Kubectl locally
 az aks install-cli
 
 # Connect to cluster
-az aks get-credentials --resource-group Kubernetes-T --name adronl-t1 --admin
+az aks get-credentials --resource-group <name-of-resource-group> --name <name-of-cluster> --admin
 
 # (Optional) Verify the connection to your cluster
 kubectl get nodes

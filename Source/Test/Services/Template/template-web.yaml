@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: template-web
+  name: template-web-deployment
   labels:
     app: template-web
   namespace: test
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: template-web
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: template-web
-          image: adronl0t.azurecr.io/microservice-template-web:stable
+          image: <acr-url>/<image-name>:stable
           # readinessProbe:
           #   httpGet:
           #     path: /health/ready
@@ -26,12 +26,6 @@ spec:
           #   httpGet:
           #     path: /health/live
           #     port: 80
-          ports:
-            - containerPort: 80
-              protocol: TCP
-          env:
-          - name: ASPNETCORE_URLS
-            value: http://+:80
           - name: DOTNET_ENVIRONMENT
             valueFrom:
               configMapKeyRef:

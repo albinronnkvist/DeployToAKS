@@ -5,7 +5,7 @@ metadata:
   namespace: ingress
 spec:
   acme:
-    email: albinronnkvist@outlook.com
+    email: <your-email-address>
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt

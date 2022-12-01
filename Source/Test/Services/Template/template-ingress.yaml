@@ -11,10 +11,10 @@ spec:
   ingressClassName: template-web-nginx
   tls:
   - hosts:
-    - adronl-t-template-web.westeurope.cloudapp.azure.com
+    - companyname-t-template-web.westeurope.cloudapp.azure.com
     secretName: template-web-tls
   rules:
-  - host: adronl-t-template-web.westeurope.cloudapp.azure.com
+  - host: companyname-t-template-web.westeurope.cloudapp.azure.com
     http:
       paths: 
       - path: /
