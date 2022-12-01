@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: microservice-template-web-deployment
+  name: template-web
   labels:
-    app: microservice-template-web
+    app: template-web
   namespace: test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: microservice-template-web
+      app: template-web
   template:
     metadata:
       labels:
-        app: microservice-template-web
+        app: template-web
     spec:
       containers:
-        - name: microservice-template-web
+        - name: template-web
           image: adronl0t.azurecr.io/microservice-template-web:stable
           # readinessProbe:
           #   httpGet:
@@ -26,7 +26,12 @@ spec:
           #   httpGet:
           #     path: /health/live
           #     port: 80
+          ports:
+            - containerPort: 80
+              protocol: TCP
           env:
+          - name: ASPNETCORE_URLS
+            value: http://+:80
           - name: DOTNET_ENVIRONMENT
             valueFrom:
               configMapKeyRef:
@@ -53,44 +58,4 @@ spec:
               secretKeyRef:
                 name: shared-secret
                 key: KeyVaultOptions__ClientSecret
-          ports:
-          - containerPort: 80
       restartPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: microservice-template-web-service
-  namespace: test
-spec:
-  selector:
-    app: microservice-template-web
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 80
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: microservice-template-web-ingress
-  annotations:
-    certmanager.k8s.io/cluster-issuer: letsencrypt
-    cert-manager.io/cluster-issuer: letsencrypt
-  namespace: test
-spec:
-  tls:
-    - hosts:
-      - adronl-t-microservice-template-web.westeurope.cloudapp.azure.com
-      secretName: microservice-template-web-tls
-  rules:
-  - host: adronl-t-microservice-template-web.westeurope.cloudapp.azure.com
-    http:
-      paths: 
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: microservice-template-web-service
-            port: 
-              number: 8080

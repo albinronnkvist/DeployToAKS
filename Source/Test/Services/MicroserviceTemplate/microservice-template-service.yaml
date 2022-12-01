@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: template-web-service
+  namespace: test
+spec:
+  type: ClusterIP
+  selector:
+    app: template-web
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80

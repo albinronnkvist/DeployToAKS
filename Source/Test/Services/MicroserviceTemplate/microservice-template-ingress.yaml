@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: template-web-ingress
+  annotations:
+    certmanager.k8s.io/cluster-issuer: letsencrypt
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  namespace: test
+spec:
+  ingressClassName: template-web-nginx
+  tls:
+  - hosts:
+    - adronl-t-template-web.westeurope.cloudapp.azure.com
+    secretName: template-web-tls
+  rules:
+  - host: adronl-t-template-web.westeurope.cloudapp.azure.com
+    http:
+      paths: 
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: template-web-service
+            port: 
+              number: 8080
