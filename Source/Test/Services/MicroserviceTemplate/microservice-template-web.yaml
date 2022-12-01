@@ -16,46 +16,46 @@ spec:
         app: microservice-template-web
     spec:
       containers:
-      - name: microservice-template-web
-        image: adronl0t.azurecr.io/microservice-template-web:stable
-        # readinessProbe:
-        #   httpGet:
-        #     path: /health/ready
-        #     port: 80
-        # livenessProbe:
-        #   httpGet:
-        #     path: /health/live
-        #     port: 80
-        env:
-        - name: DOTNET_ENVIRONMENT
-          valueFrom:
-            configMapKeyRef:
-              name: shared-configmap
-              key: environment
-        - name: KeyVaultOptions__Enabled
-          valueFrom:
-            configMapKeyRef:
-              name: shared-configmap
-              key: key-vault-enabled
-              optional: true
-        - name: KeyVaultOptions__TenantId
-          valueFrom:
-            secretKeyRef:
-              name: shared-secret
-              key: KeyVaultOptions__TenantId
-        - name: KeyVaultOptions__ClientId
-          valueFrom:
-            secretKeyRef:
-              name: shared-secret
-              key: KeyVaultOptions__ClientId
-        - name: KeyVaultOptions__ClientSecret
-          valueFrom:
-            secretKeyRef:
-              name: shared-secret
-              key: KeyVaultOptions__ClientSecret
-        ports:
-        - containerPort: 80
-    restartPolicy: always
+        - name: microservice-template-web
+          image: adronl0t.azurecr.io/microservice-template-web:stable
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health/ready
+          #     port: 80
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health/live
+          #     port: 80
+          env:
+          - name: DOTNET_ENVIRONMENT
+            valueFrom:
+              configMapKeyRef:
+                name: shared-configmap
+                key: environment
+          - name: KeyVaultOptions__Enabled
+            valueFrom:
+              configMapKeyRef:
+                name: shared-configmap
+                key: key-vault-enabled
+                optional: true
+          - name: KeyVaultOptions__TenantId
+            valueFrom:
+              secretKeyRef:
+                name: shared-secret
+                key: KeyVaultOptions__TenantId
+          - name: KeyVaultOptions__ClientId
+            valueFrom:
+              secretKeyRef:
+                name: shared-secret
+                key: KeyVaultOptions__ClientId
+          - name: KeyVaultOptions__ClientSecret
+            valueFrom:
+              secretKeyRef:
+                name: shared-secret
+                key: KeyVaultOptions__ClientSecret
+          ports:
+          - containerPort: 80
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
@@ -80,8 +80,8 @@ metadata:
   namespace: test
 spec:
   tls:
-  - hosts:
-    - adronl-t-microservice-template-web.westeurope.cloudapp.azure.com
+    - hosts:
+      - adronl-t-microservice-template-web.westeurope.cloudapp.azure.com
       secretName: microservice-template-web-tls
   rules:
   - host: adronl-t-microservice-template-web.westeurope.cloudapp.azure.com

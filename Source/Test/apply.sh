@@ -20,7 +20,7 @@ kubectl apply -f Source/Test/Shared/shared-limitrange.yaml
 ###
 # Microservice with: Deployment, Service & Ingress
 # We also need to install Ingress Nginx Controller
-kubectl apply -f Source/Test/Services/microservice-template-web.yaml
+kubectl apply -f Source/Test/Services/MicroserviceTemplate/microservice-template-web.yaml
 helm install microservice-template-web-nginx ingress-nginx/ingress-nginx \
     --version 4.1.3 \
     --set controller.ingressClassResource.name=microservice-template-web-nginx 

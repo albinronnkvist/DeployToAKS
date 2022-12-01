@@ -35,9 +35,7 @@ az aks create \
 az aks install-cli
 
 # Connect to cluster
-az aks get-credentials \
-    --resource-group Kubernetes-T \
-    --name adronl-t1
+az aks get-credentials --resource-group Kubernetes-T --name adronl-t1 --admin
 
 # (Optional) Verify the connection to your cluster
 kubectl get nodes
@@ -55,17 +53,14 @@ kubectl apply -f Source/Shared/ingress-namespace.yaml
 # Cert-manager
 ####
 # Install the CustomResourceDefinition resources
-kubectl apply --validate=false \
-    -f https://github.com/jetstack/cert-manager/releases/download/v0.15.1/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.crds.yaml
 
 # Add the Jetstack Helm repository and update your local Helm chart repo cache
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 
 # Install the cert-manager Helm chart
-helm install --name cert-manager \
-    -n ingress \
-    --version v0.15.0 jetstack\cert-manager
+helm template cert-manager jetstack/cert-manager --namespace ingress | kubectl apply -f -
 
 # (Optional) Verify the installation
 kubectl get pods -n ingress
